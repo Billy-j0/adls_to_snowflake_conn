@@ -1,0 +1,5 @@
+pandas
+openpyxl
+azure-storage-file-datalake
+snowflake-connector-python
+python-dotenv
