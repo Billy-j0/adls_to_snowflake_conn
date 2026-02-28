@@ -31,7 +31,7 @@ service_client = DataLakeServiceClient(
     credential=ADLS_KEY
 )
 
-print(f"Downloading file {FILE_PATH} from container {FILE_SYSTEM}...")
+print(f"Downloading file from container...")
 file_client = service_client.get_file_client(FILE_SYSTEM, FILE_PATH)
 download = file_client.download_file()
 excel_bytes = download.readall()
@@ -42,7 +42,7 @@ print(f"Excel has {len(df)} rows and {len(df.columns)} columns.")
 
 # SAVE CSV TEMP
 csv_path = "/tmp/adls_file.csv"
-print(f"Saving DataFrame to temporary CSV at {csv_path}...")
+print(f"Saving DataFrame to temporary CSV...")
 df.to_csv(csv_path, index=False)
 
 # LOAD INTO SNOWFLAKE
@@ -58,7 +58,7 @@ conn = snowflake.connector.connect(
 
 cur = conn.cursor()
 
-print(f"Truncating table {SNOW_TABLE}...")
+print(f"Truncating table...")
 cur.execute(f"TRUNCATE TABLE {SNOW_TABLE}")
 
 print("Uploading CSV file to Snowflake stage...")
@@ -75,5 +75,8 @@ FILE_FORMAT = (
 )
 MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE
 """)
+
+print("Clean up snowflake internal stage...")
+cur.execute(f"REMOVE @%{SNOW_TABLE}/adls_file.csv")
 
 print("Load completed successfully!")
