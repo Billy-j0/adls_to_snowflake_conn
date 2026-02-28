@@ -6,7 +6,10 @@ import snowflake.connector
 from dotenv import load_dotenv
 
 print("Loading environment variables...")
-load_dotenv()
+
+# Load .env only if NOT running inside GitHub Actions
+if os.getenv("GITHUB_ACTIONS") is None:
+    load_dotenv()
 
 ADLS_ACCOUNT = os.getenv("ADLS_ACCOUNT")
 ADLS_KEY = os.getenv("ADLS_KEY")
