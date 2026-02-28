@@ -68,7 +68,12 @@ print("Copying data into Snowflake table...")
 cur.execute(f"""
 COPY INTO {SNOW_TABLE}
 FROM @%{SNOW_TABLE}/adls_file.csv
-FILE_FORMAT = (TYPE = CSV FIELD_OPTIONALLY_ENCLOSED_BY='"' SKIP_HEADER=1)
+FILE_FORMAT = (
+    TYPE = CSV
+    FIELD_OPTIONALLY_ENCLOSED_BY='"'
+    PARSE_HEADER = TRUE
+)
+MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE
 """)
 
 print("Load completed successfully!")
