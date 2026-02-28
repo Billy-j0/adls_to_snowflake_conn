@@ -1,0 +1,40 @@
+name: ADLS to Snowflake Loader
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:   # allows manual trigger
+
+jobs:
+  load-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Loader Script
+        run: python main.py
+        env:
+          ADLS_ACCOUNT: ${{ secrets.ADLS_ACCOUNT }}
+          ADLS_KEY: ${{ secrets.ADLS_KEY }}
+          ADLS_CONTAINER: ${{ secrets.ADLS_CONTAINER }}
+          ADLS_FILE_PATH: ${{ secrets.ADLS_FILE_PATH }}
+          SNOW_USER: ${{ secrets.SNOW_USER }}
+          SNOW_PASSWORD: ${{ secrets.SNOW_PASSWORD }}
+          SNOW_ACCOUNT: ${{ secrets.SNOW_ACCOUNT }}
+          SNOW_DATABASE: ${{ secrets.SNOW_DATABASE }}
+          SNOW_SCHEMA: ${{ secrets.SNOW_SCHEMA }}
+          SNOW_WAREHOUSE: ${{ secrets.SNOW_WAREHOUSE }}
+          SNOW_TABLE: ${{ secrets.SNOW_TABLE }}
